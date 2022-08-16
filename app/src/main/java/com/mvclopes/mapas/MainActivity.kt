@@ -3,9 +3,11 @@ package com.mvclopes.mapas
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MarkerOptions
 import com.mvclopes.mapas.databinding.ActivityMainBinding
 import com.mvclopes.mapas.model.Place
@@ -53,6 +55,14 @@ class MainActivity : AppCompatActivity() {
 
         mapFragment.getMapAsync { googleMap ->
             addMarkers(googleMap)
+
+            googleMap.setOnMapLoadedCallback {
+                val bounds = LatLngBounds.builder()
+                places.forEach {
+                    bounds.include(it.latLng)
+                }
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100))
+            }
         }
     }
 
