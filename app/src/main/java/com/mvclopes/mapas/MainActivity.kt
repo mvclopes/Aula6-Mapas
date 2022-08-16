@@ -2,12 +2,14 @@ package com.mvclopes.mapas
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.mvclopes.mapas.databinding.ActivityMainBinding
 import com.mvclopes.mapas.model.Place
+import com.mvclopes.mapas.utils.BitmapHelper
 
 class MainActivity : AppCompatActivity() {
 
@@ -61,6 +63,16 @@ class MainActivity : AppCompatActivity() {
                     .title(place.name)
                     .snippet(place.address)
                     .position(place.latLng)
+                    .icon(
+                        BitmapHelper.vectorToBitmap(
+                            context = this,
+                            drawableId = R.drawable.ic_android_foreground,
+                            color = ContextCompat.getColor(
+                                this,
+                                R.color.purple_700
+                            )
+                        )
+                    )
             )
         }
     }
