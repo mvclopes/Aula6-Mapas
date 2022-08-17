@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
+    // Lista de lugares, especificando nome e sua posição
     private val places = arrayListOf(
         Place(
             name = "FIAP Campus Vila Olimpia",
@@ -51,29 +52,40 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        // Obtendo fragmento de mapa
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
 
+        // Callback utilizado quando o mapa já está pronto para uso
         mapFragment.getMapAsync { googleMap ->
             addMarkers(googleMap)
 
+            // Callback utilizando quando o mapa já foi renderizado
             googleMap.setOnMapLoadedCallback {
+                // Objeto contendo latitude e longitude, representando uma região delimitada pelas localizações
                 val bounds = LatLngBounds.builder()
+
                 places.forEach {
+                    // Adicionado as localizações  ao objeto Bounds
                     bounds.include(it.latLng)
                 }
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 100))
+
+                // Movimenta a câmera de acordo com a região especificada (Bounds)
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 250))
             }
         }
     }
 
+    // Método responsável para adicionar marcadores no mapa
     private fun addMarkers(googleMap: GoogleMap) {
         places.forEach { place ->
-            val marker = googleMap.addMarker(
+            googleMap.addMarker(
+                // Configurando os marcadores, como por exemplo: título, ícone, posição
                 MarkerOptions()
                     .title(place.name)
                     .snippet(place.address)
                     .position(place.latLng)
                     .icon(
+                        // Chamada ao método responsável por converter vetor de imagem em Bitmap
                         BitmapHelper.vectorToBitmap(
                             context = this,
                             drawableId = R.drawable.ic_android_foreground,
